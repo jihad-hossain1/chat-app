@@ -67,6 +67,8 @@ const fetchChats = asyncHandler(async (req, res) => {
         throw new Error(error.message);
     }
 })
+
+
 const createGroupChat = asyncHandler(async (req, res) => {
     //check user are fill required input
     if (!req.body.users || !req.body.name) {
@@ -99,4 +101,26 @@ const createGroupChat = asyncHandler(async (req, res) => {
         throw new Error(error.message)
     }
 })
-module.exports = {accessChat,fetchChats ,createGroupChat}
+
+const renameGroup = asyncHandler(async (req, res) => {
+    const { chatId, chatName } = req.body;
+
+    const updatedChat = await Chat.findByIdAndUpdate(
+        chatId,
+        {
+            chatName: chatName,
+        }, {
+        new: true,
+    }
+    ).populate("users", "-password")
+        .populate("groupAdmin", "-password");
+    
+    if (!updatedChat) {
+        res.status(404);
+        throw new Error('chat not Found')
+    } else {
+        res.json(updatedChat)
+    }
+
+})
+module.exports = {accessChat,fetchChats ,createGroupChat,renameGroup}

@@ -36,7 +36,7 @@ const SignUp = () => {
       toast.success("login successfull");
       setLoading(false);
       localStorage.setItem("userInfo", JSON.stringify(data));
-      navigate("/");
+      navigate("/chat");
     } catch (error) {
       console.log(error);
       toast.error(error.message);
